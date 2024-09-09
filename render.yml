@@ -2,7 +2,7 @@
 version: 1
 services:
   - type: web
-    name: template-node-ts
+    name: user_api
     env: docker
     docker:
       build:
