@@ -1,0 +1,57 @@
+# Render Blueprint
+version: 1
+services:
+  - type: web
+    name: template-node-ts
+    env: docker
+    docker:
+      build:
+        context: .
+        # target: production # Si usas un multi-stage build
+    ports:
+      - "80:80"  # Cambia el puerto según sea necesario
+    envVars:
+      - key: SERVER_PORT
+        value: ${SERVER_PORT}
+      - key: MYSQL_HOST
+        value: db
+      - key: MYSQL_DATABASE
+        value: ${MYSQL_DATABASE}
+      - key: MYSQL_USER
+        value: ${MYSQL_USER}
+      - key: MYSQL_PASSWORD
+        value: ${MYSQL_PASS}
+      - key: JWT_SECRET_SECRET
+        value: ${JWT_SECRET_SECRET}
+      - key: JWT_SECRET_HEADER
+        value: ${JWT_SECRET_HEADER}
+      - key: JWT_SECRET_HEADERS
+        value: ${JWT_SECRET_HEADERS}
+      - key: JWT_SECRET_EXPIRES
+        value: ${JWT_SECRET_EXPIRES}
+      - key: JWT_SECRET_REFRESH
+        value: ${JWT_SECRET_REFRESH}
+    # Render automáticamente maneja el link entre servicios, no es necesario usar depends_on o networks
+
+  - type: database
+    name: mysql-db
+    engine: mysql
+    version: 8.0
+    envVars:
+      - key: MYSQL_ROOT_PASSWORD
+        value: ${MYSQL_PASS}
+      - key: MYSQL_DATABASE
+        value: ${MYSQL_DATABASE}
+      - key: MYSQL_USER
+        value: ${MYSQL_USER}
+      - key: MYSQL_PASSWORD
+        value: ${MYSQL_PASS}
+    # Render maneja automáticamente el almacenamiento persistente para bases de datos
+
+# Opcional: Para definir secretos o variables de entorno globales
+# secrets:
+#   - key: MYSQL_PASS
+#     value: your_mysql_password
+#   - key: JWT_SECRET_SECRET
+#     value: your_jwt_secret_secret
+  # Agrega otros secretos aquí si es necesario

@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: . # Usa el Dockerfile en el directorio actual
+      # target: production # Opcional, si usas un multi-stage build
+    container_name: template-node-ts
+    env_file:
+      - .env  # Cargar variables desde el archivo .env
+    ports:
+      - "${SERVER_PORT}:${SERVER_PORT}"  # Exponiendo el puerto del servidor desde el .env
+    environment:
+      MYSQL_HOST: db
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASS}
+      JWT_SECRET_SECRET: ${JWT_SECRET_SECRET}
+      JWT_SECRET_HEADER: ${JWT_SECRET_HEADER}
+      JWT_SECRET_HEADERS: ${JWT_SECRET_HEADERS}
+      JWT_SECRET_EXPIRES: ${JWT_SECRET_EXPIRES}
+      JWT_SECRET_REFRESH: ${JWT_SECRET_REFRESH}
+    depends_on:
+      - db  # Asegurarse de que la base de datos MySQL esté lista antes de levantar la API
+    networks:
+      - app-network
+
+  db:
+    image: mysql:8.0
+    container_name: mysql_db
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_PASS}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASS}
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - app-network
+
+volumes:
+  db_data:
+    driver: local
+
+networks:
+  app-network:
+    driver: bridge
