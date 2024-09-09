@@ -14,7 +14,7 @@ services:
       - key: SERVER_PORT
         value: ${SERVER_PORT}
       - key: MYSQL_HOST
-        value: db
+        value: mysql-db  # El nombre del servicio de la base de datos
       - key: MYSQL_DATABASE
         value: ${MYSQL_DATABASE}
       - key: MYSQL_USER
@@ -33,19 +33,9 @@ services:
         value: ${JWT_SECRET_REFRESH}
     # Render automáticamente maneja el link entre servicios, no es necesario usar depends_on o networks
 
-  - type: database
+  - type: mysql
     name: mysql-db
-    engine: mysql
     version: 8.0
-    envVars:
-      - key: MYSQL_ROOT_PASSWORD
-        value: ${MYSQL_PASS}
-      - key: MYSQL_DATABASE
-        value: ${MYSQL_DATABASE}
-      - key: MYSQL_USER
-        value: ${MYSQL_USER}
-      - key: MYSQL_PASSWORD
-        value: ${MYSQL_PASS}
     # Render maneja automáticamente el almacenamiento persistente para bases de datos
 
 # Opcional: Para definir secretos o variables de entorno globales
