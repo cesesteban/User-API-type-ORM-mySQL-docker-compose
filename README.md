@@ -43,7 +43,7 @@ Asegúrate de tener Node.js y yarn instalados en tu sistema.
 
 ## Endpoints
 
-Consulta la [documentación de la API]() para obtener detalles sobre los endpoints disponibles y cómo interactuar con ellos.
+Consulta la [documentación de la API](https://documenter.getpostman.com/view/12812388/2sAXjRXVSi) para obtener detalles sobre los endpoints disponibles y cómo interactuar con ellos.
 
 ## Estructura del Proyecto
 
