@@ -1,7 +1,7 @@
 import { DataSource } from 'typeorm';
-import { UserEntity } from '../entities/UserEntity';
-import { UserRoleEntity } from '../entities/UserRoleEntity';
-import { UserSessionEntity } from '../entities/UserSessionEntity';
+import { User } from '../entities/user/User';
+import { UserRole } from '../entities/user/UserRole';
+import { UserSession } from '../entities/user/UserSession';
 import config from './config';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 
@@ -21,7 +21,7 @@ export const AppDataSource = new DataSource({
     synchronize: true,
     timezone: 'Z', // UTC
     logging: false,
-    entities: [UserEntity, UserRoleEntity, UserSessionEntity],
+    entities: [User, UserRole, UserSession],
     migrations: [],
     subscribers: [],
     namingStrategy: new SnakeNamingStrategy()

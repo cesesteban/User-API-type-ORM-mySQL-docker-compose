@@ -1,8 +1,8 @@
 import dotenv from 'dotenv';
-import MysqlConfig from '../interfaces/config.interfaces/IMySqlConfig';
-import ServerConfig from '../interfaces/config.interfaces/IServerConfig';
-import JwtSecretConfig from '../interfaces/config.interfaces/IJwtSecretConfig';
-import IConfig from '../interfaces/config.interfaces/IConfig';
+import MysqlConfig from '../interfaces/config/IMySqlConfig';
+import ServerConfig from '../interfaces/config/IServerConfig';
+import JwtSecretConfig from '../interfaces/config/IJwtSecretConfig';
+import IConfig from '../interfaces/config/IConfig';
 
 dotenv.config();
 

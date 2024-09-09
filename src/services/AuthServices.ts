@@ -2,13 +2,13 @@ import { AppDataSource } from '../configs/dataSource';
 import config from '../configs/config';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import { UserEntity } from '../entities/UserEntity';
-import { UserSessionEntity } from '../entities/UserSessionEntity';
+import { User } from '../entities/user/User';
+import { UserSession } from '../entities/user/UserSession';
 import { SESSION_ENTITY } from '../commons/statics';
 
 export class AuthService {
-    private userRepository = AppDataSource.getRepository(UserEntity);
-    private userSessionRepository = AppDataSource.getRepository(UserSessionEntity);
+    private userRepository = AppDataSource.getRepository(User);
+    private userSessionRepository = AppDataSource.getRepository(UserSession);
 
     EXPIRES_IN = Number(config.jwtSecret.expires) || 3600;
 
@@ -48,8 +48,8 @@ export class AuthService {
         return null;
     }
 
-    async createSession(user: UserEntity, token: string, expiresIn: number): Promise<void> {
-        const session = new UserSessionEntity();
+    async createSession(user: User, token: string, expiresIn: number): Promise<void> {
+        const session = new UserSession();
         session.user = user;
         session.sessionToken = token;
         session.expiresAt = new Date(Date.now() + expiresIn * 1000);
@@ -57,7 +57,7 @@ export class AuthService {
         await this.userSessionRepository.save(session);
     }
 
-    async updateSession(user: UserEntity, token: string, expiresIn: number): Promise<void> {
+    async updateSession(user: User, token: string, expiresIn: number): Promise<void> {
         const now = new Date();
         user.session.sessionToken = token;
         user.session.updatedAt = new Date(now.getTime());
@@ -65,14 +65,14 @@ export class AuthService {
         await this.userRepository.save(user);
     }
 
-    async getUserWithSessionById(id: number): Promise<UserEntity | null> {
+    async getUserWithSessionById(id: number): Promise<User | null> {
         return await this.userRepository.findOne({
             where: { id },
             relations: [SESSION_ENTITY]
         });
     }
 
-    async getUserWithSessionByEmail(email: string): Promise<UserEntity | null> {
+    async getUserWithSessionByEmail(email: string): Promise<User | null> {
         return await this.userRepository.findOne({
             where: { email },
             relations: [SESSION_ENTITY]

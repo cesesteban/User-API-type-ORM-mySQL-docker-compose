@@ -1,6 +1,11 @@
 node_modules/**/*
 build/**/*
+collection/**/*
 certs/**/*
+
+/build
+/node_modules
+/collection
 
 *.jks
 *.p8

@@ -2,8 +2,8 @@ import { AppDataSource } from '../configs/dataSource';
 import * as crypto from 'crypto';
 import bcrypt from 'bcryptjs';
 import IRequestCreateUser from '../models/user/IRequestCreateUser';
-import { UserEntity } from '../entities/UserEntity';
-import { UserRoleEntity } from '../entities/UserRoleEntity';
+import { User } from '../entities/user/User';
+import { UserRole } from '../entities/user/UserRole';
 import { UserDTO } from '../dtos/user/UserDto';
 import { KEY_EMAIL, KEY_ENCODING, KEY_PASSWORD, KEY_ROLES, ROLES_ENTITY, SESSION_ENTITY, STATUS_CODE } from '../commons/statics';
 import { nonNull } from '../commons/utils';
@@ -12,11 +12,11 @@ import IRequestUpdateUser from '../models/user/IRequestUpdateUser';
 import IRequestPatchUser from '../models/user/IRequestPatchUser';
 
 export class UserService {
-    private userRepository = AppDataSource.getRepository(UserEntity);
+    private userRepository = AppDataSource.getRepository(User);
 
     async createUser(userRequest: IRequestCreateUser): Promise<UserDTO> {
-        const user = await this.buildUserEntity(userRequest, new UserEntity());
-        const newUserEntity: UserEntity = await this.userRepository.save(user);
+        const user = await this.buildUserEntity(userRequest, new User());
+        const newUserEntity: User = await this.userRepository.save(user);
         return new UserDTO(newUserEntity);
     }
 
@@ -31,7 +31,7 @@ export class UserService {
         return new UserDTO(user);
     }
 
-    async getUserEntityById(id: number): Promise<UserEntity | null> {
+    async getUserEntityById(id: number): Promise<User | null> {
         return await this.userRepository.findOne({
             where: { id }
         });
@@ -81,7 +81,7 @@ export class UserService {
         return newPassword;
     }
 
-    async buildUserEntity(userRequest: IRequestPatchUser | IRequestUpdateUser | IRequestCreateUser, userEntity: UserEntity): Promise<UserEntity> {
+    async buildUserEntity(userRequest: IRequestPatchUser | IRequestUpdateUser | IRequestCreateUser, userEntity: User): Promise<User> {
         userEntity.username = userRequest.username != null ? userRequest.username : userEntity.username;
         userEntity.firstName = userRequest.firstName != null ? userRequest.firstName : userEntity.firstName;
         userEntity.lastName = userRequest.lastName != null ? userRequest.lastName : userEntity.lastName;
@@ -101,8 +101,8 @@ export class UserService {
         return userEntity;
     }
 
-    private buildRolesEntity(userRequest: IRequestCreateUser | IRequestUpdateUser, userEntity: UserEntity): UserRoleEntity[] {
-        const existingRoles = userEntity.roles || [];
+    private buildRolesEntity(userRequest: IRequestCreateUser | IRequestUpdateUser, user: User): UserRole[] {
+        const existingRoles = user.roles || [];
 
         const newRoles =
             userRequest.roles?.map((role) => {
@@ -113,9 +113,9 @@ export class UserService {
                     return userRole;
                 } else {
                     // Create new role
-                    const newUserRole = new UserRoleEntity();
+                    const newUserRole = new UserRole();
                     newUserRole.role = role;
-                    newUserRole.user = userEntity;
+                    newUserRole.user = user;
                     newUserRole.isActive = true;
                     return newUserRole;
                 }

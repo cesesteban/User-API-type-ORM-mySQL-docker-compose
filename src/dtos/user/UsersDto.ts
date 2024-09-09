@@ -1,5 +1,5 @@
 import moment from 'moment';
-import { UserEntity } from '../../entities/UserEntity';
+import { User } from '../../entities/user/User';
 
 export class UsersDTO {
     id: number;
@@ -8,7 +8,7 @@ export class UsersDTO {
     lastName: string;
     email: string;
 
-    constructor(user: UserEntity) {
+    constructor(user: User) {
         this.id = user.id;
         this.username = user.username;
         this.firstName = user.firstName;

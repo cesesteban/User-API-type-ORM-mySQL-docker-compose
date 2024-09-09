@@ -1,13 +1,13 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToOne } from 'typeorm';
-import { UserEntity } from './UserEntity';
+import { User } from './User';
 
 @Entity()
-export class UserSessionEntity {
+export class UserSession {
     @PrimaryGeneratedColumn('increment')
     id: number;
 
-    @OneToOne(() => UserEntity, (user) => user.session)
-    user: UserEntity;
+    @OneToOne(() => User, (user) => user.session)
+    user: User;
 
     @Column({ type: 'varchar', length: 255, unique: true })
     sessionToken: string;

@@ -1,14 +1,14 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
-import { UserEntity } from './UserEntity';
-import { EUserRole } from '../enums/EUserRole';
+import { User } from './User';
+import { EUserRole } from '../../enums/EUserRole';
 
 @Entity()
-export class UserRoleEntity {
+export class UserRole {
     @PrimaryGeneratedColumn('increment')
     id: number;
 
-    @ManyToOne(() => UserEntity, (user) => user.roles)
-    user: UserEntity;
+    @ManyToOne(() => User, (user) => user.roles)
+    user: User;
 
     @Column({
         type: 'enum',

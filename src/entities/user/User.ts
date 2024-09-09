@@ -1,10 +1,9 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany, OneToOne, JoinColumn } from 'typeorm';
-import { UserRoleEntity } from './UserRoleEntity';
-import { UserSessionEntity } from './UserSessionEntity';
-import { EUserRole } from '../enums/EUserRole';
+import { UserRole } from './UserRole';
+import { UserSession } from './UserSession';
 
 @Entity()
-export class UserEntity {
+export class User {
     @PrimaryGeneratedColumn('increment')
     id: number;
 
@@ -32,12 +31,12 @@ export class UserEntity {
     @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
     updatedAt: Date;
 
-    @OneToMany(() => UserRoleEntity, (role) => role.user, { cascade: true })
-    roles: UserRoleEntity[];
+    @OneToMany(() => UserRole, (role) => role.user, { cascade: true })
+    roles: UserRole[];
 
-    @OneToOne(() => UserSessionEntity, (session) => session.user, { cascade: true })
+    @OneToOne(() => UserSession, (session) => session.user, { cascade: true })
     @JoinColumn()
-    session: UserSessionEntity;
+    session: UserSession;
 
     @Column({ type: 'tinyint', default: 1 })
     isActive: boolean;

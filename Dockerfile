@@ -2,7 +2,6 @@
 FROM node:17 AS build-image
 WORKDIR /usr/src/app
 
-# Copiar solo el package.json y package-lock.json primero para aprovechar la caché de Docker
 COPY package*.json ./
 COPY tsconfig.json ./
 COPY ./src ./src
@@ -20,17 +19,14 @@ RUN npx tsc --outDir /usr/src/app/dist
 FROM node:17
 WORKDIR /usr/src/app
 
-# Copiar el package.json y el package-lock.json desde la etapa de construcción
 COPY package*.json ./
 RUN npm install --production
 
-# Copiar los archivos generados desde la etapa de construcción
 COPY --from=build-image /usr/src/app/dist ./dist
 
-# Copiar el código fuente restante
-COPY ./src ./src
+# Copia el resto del código fuente a un subdirectorio para evitar conflictos
+COPY . ./src
 
-# Exponer el puerto configurado
 EXPOSE ${SERVER_PORT}
 
 CMD [ "node", "dist/app.js" ]

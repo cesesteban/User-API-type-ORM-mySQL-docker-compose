@@ -1,14 +1,14 @@
 import { Request, Response, NextFunction } from 'express';
 import { ROLES_ENTITY, STATUS_CODE, STATUS_MESSAGE, UNAUTHORIZED_MESSAGE } from '../commons/statics';
 import { AppDataSource } from '../configs/dataSource';
-import { UserEntity } from '../entities/UserEntity';
+import { User } from '../entities/user/User';
 import { isNull, nonNull } from '../commons/utils';
 import { EUserRole } from '../enums/EUserRole';
-import { UserRoleEntity } from '../entities/UserRoleEntity';
+import { UserRole } from '../entities/user/UserRole';
 
 export const validateRole = (roles: Array<EUserRole>) => {
     return async (req: Request, res: Response, next: NextFunction) => {
-        const userRepository = AppDataSource.getRepository(UserEntity);
+        const userRepository = AppDataSource.getRepository(User);
         //Get the user ID from previous midleware
         const userId: number = <number>res.locals.jwtPayload.userId;
 
@@ -24,7 +24,7 @@ export const validateRole = (roles: Array<EUserRole>) => {
 
         user.roles = user.roles.filter((role) => role.isActive);
         //Check if array of authorized roles includes the user's role
-        const hasValidRole = user.roles.some((userRole: UserRoleEntity) => {
+        const hasValidRole = user.roles.some((userRole: UserRole) => {
             if (userRole.role === EUserRole.USER) {
                 const { id } = req.params;
                 if (isNull(id)) return false;

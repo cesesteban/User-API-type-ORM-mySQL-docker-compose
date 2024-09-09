@@ -1,5 +1,5 @@
 import moment from 'moment';
-import { UserEntity } from '../../entities/UserEntity';
+import { User } from '../../entities/user/User';
 import { EUserRole } from '../../enums/EUserRole';
 import { MOMENT_FORMAT } from '../../commons/statics';
 
@@ -21,7 +21,7 @@ export class UserDTO {
     createdAt: string;
     updatedAt: string;
 
-    constructor(user: UserEntity) {
+    constructor(user: User) {
         this.id = user.id;
         this.username = user.username;
         this.firstName = user.firstName;

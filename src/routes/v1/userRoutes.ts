@@ -6,7 +6,7 @@ import { EUserRole } from '../../enums/EUserRole';
 import { validateRole } from '../../middlewares/validateRole';
 import { validateJwt } from '../../middlewares/validateJwt';
 import IRequestUpdateUser from '../../models/user/IRequestPatchUser';
-import IRequestChangePassword from '../../interfaces/auth.interfaces/IRequestChangePassword';
+import IRequestChangePassword from '../../interfaces/auth/IRequestChangePassword';
 import IRequestPatchUser from '../../models/user/IRequestPatchUser';
 
 const router = Router();
