@@ -5,7 +5,7 @@ services:
     build:
       context: . # Usa el Dockerfile en el directorio actual
       # target: production # Opcional, si usas un multi-stage build
-    container_name: template-node-ts
+    container_name: user_api
     env_file:
       - .env  # Cargar variables desde el archivo .env
     ports:
