@@ -13,14 +13,14 @@ services:
     envVars:
       - key: SERVER_PORT
         value: ${SERVER_PORT}
-      - key: MYSQL_HOST
-        value: mysql-db  # El nombre del servicio de la base de datos
-      - key: MYSQL_DATABASE
-        value: ${MYSQL_DATABASE}
-      - key: MYSQL_USER
-        value: ${MYSQL_USER}
-      - key: MYSQL_PASSWORD
-        value: ${MYSQL_PASS}
+      - key: PGHOST
+        value: postgres-db  # El nombre del servicio de la base de datos
+      - key: PGDATABASE
+        value: ${PGDATABASE}
+      - key: PGUSER
+        value: ${PGUSER}
+      - key: PGPASSWORD
+        value: ${PGPASSWORD}
       - key: JWT_SECRET_SECRET
         value: ${JWT_SECRET_SECRET}
       - key: JWT_SECRET_HEADER
@@ -33,15 +33,15 @@ services:
         value: ${JWT_SECRET_REFRESH}
     # Render automáticamente maneja el link entre servicios, no es necesario usar depends_on o networks
 
-  - type: mysql
-    name: mysql-db
-    version: 8.0
+  - type: postgres
+    name: postgres-db
+    version: 14
     # Render maneja automáticamente el almacenamiento persistente para bases de datos
 
 # Opcional: Para definir secretos o variables de entorno globales
 # secrets:
-#   - key: MYSQL_PASS
-#     value: your_mysql_password
+#   - key: PGPASSWORD
+#     value: your_pg_password
 #   - key: JWT_SECRET_SECRET
 #     value: your_jwt_secret_secret
   # Agrega otros secretos aquí si es necesario
