@@ -1,6 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import { validate, ValidationError } from 'class-validator';
-import { MESSAGE_INTERNAL_ERROR, STATUS_CODE } from '../commons/statics';
+import { MESSAGE_INTERNAL_ERROR, NAMESPACE_API_SERVER, STATUS_CODE, STATUS_MESSAGE } from '../commons/statics';
+import { ApiException } from '../handlers/ApiException';
+import logging from '../configs/logging';
 
 export function validateHeaders(validatorClass: any) {
     return async (req: Request, res: Response, next: NextFunction) => {
@@ -18,7 +20,8 @@ export function validateHeaders(validatorClass: any) {
                 next();
             }
         } catch (error) {
-            res.status(STATUS_CODE.INTERNAL_ERROR).json({ result: MESSAGE_INTERNAL_ERROR });
+            logging.error(NAMESPACE_API_SERVER, `METHOD: [${req.method}] - URL: [${req.url}] - IP: [${req.socket.remoteAddress}] - ERROR: ["${error}]`);
+            return res.status(STATUS_CODE.INTERNAL_ERROR).json({ message: STATUS_MESSAGE.INTERNAL_ERROR });
         }
     };
 

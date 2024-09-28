@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { ROLES_ENTITY, STATUS_CODE, STATUS_MESSAGE, UNAUTHORIZED_MESSAGE } from '../commons/statics';
+import { ROLES_ENTITY, STATUS_CODE, STATUS_MESSAGE } from '../commons/statics';
 import { AppDataSource } from '../configs/dataSource';
 import { User } from '../entities/user/User';
 import { isNull, nonNull } from '../commons/utils';
@@ -37,7 +37,7 @@ export const validateRole = (roles: Array<EUserRole>) => {
         if (hasValidRole) {
             next();
         } else {
-            return res.status(STATUS_CODE.UNAUTHORIZED).send(STATUS_MESSAGE.UNAUTHORIZED);
+            return res.status(STATUS_CODE.FORBIDDEN).json({ message: STATUS_MESSAGE.FORBIDDEN });
         }
     };
 };

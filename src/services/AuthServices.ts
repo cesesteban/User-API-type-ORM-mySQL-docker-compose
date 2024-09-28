@@ -4,7 +4,8 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { User } from '../entities/user/User';
 import { UserSession } from '../entities/user/UserSession';
-import { SESSION_ENTITY } from '../commons/statics';
+import { SESSION_ENTITY, STATUS_CODE, STATUS_MESSAGE } from '../commons/statics';
+import { ApiException } from '../handlers/ApiException';
 
 export class AuthService {
     private userRepository = AppDataSource.getRepository(User);
@@ -15,10 +16,8 @@ export class AuthService {
     async loginUser(email: string, password: string): Promise<string | null> {
         const user = await this.getUserWithSessionByEmail(email);
 
-        if (!user) return null;
-
         const isPasswordValid = await bcrypt.compare(password, user.passwordHash);
-        if (!isPasswordValid) return null;
+        if (!isPasswordValid) throw new ApiException(STATUS_MESSAGE.UNAUTHORIZED, STATUS_CODE.UNAUTHORIZED);
 
         const token = jwt.sign({ userId: user.id }, config.jwtSecret.secret as string, {
             expiresIn: this.EXPIRES_IN
@@ -36,16 +35,14 @@ export class AuthService {
     async refreshToken(token: string, id: number): Promise<string | null> {
         const user = await this.getUserWithSessionById(id);
 
-        if (user?.session.sessionToken == token) {
-            const newToken = jwt.sign({ userId: id }, config.jwtSecret.secret as string, {
-                expiresIn: this.EXPIRES_IN
-            });
+        if (user.session.sessionToken != token) throw new ApiException(STATUS_MESSAGE.UNAUTHORIZED, STATUS_CODE.UNAUTHORIZED);
 
-            this.updateSession(user, newToken, this.EXPIRES_IN);
-            return newToken;
-        }
+        const newToken = jwt.sign({ userId: id }, config.jwtSecret.secret as string, {
+            expiresIn: this.EXPIRES_IN
+        });
 
-        return null;
+        this.updateSession(user, newToken, this.EXPIRES_IN);
+        return newToken;
     }
 
     async createSession(user: User, token: string, expiresIn: number): Promise<void> {
@@ -65,17 +62,22 @@ export class AuthService {
         await this.userRepository.save(user);
     }
 
-    async getUserWithSessionById(id: number): Promise<User | null> {
-        return await this.userRepository.findOne({
+    async getUserWithSessionById(id: number): Promise<User> {
+        const user = await this.userRepository.findOne({
             where: { id },
             relations: [SESSION_ENTITY]
         });
+        if (!user) throw new ApiException(STATUS_MESSAGE.UNAUTHORIZED, STATUS_CODE.UNAUTHORIZED);
+        return user;
     }
 
-    async getUserWithSessionByEmail(email: string): Promise<User | null> {
-        return await this.userRepository.findOne({
+    async getUserWithSessionByEmail(email: string): Promise<User> {
+        const user = await this.userRepository.findOne({
             where: { email },
             relations: [SESSION_ENTITY]
         });
+
+        if (!user) throw new ApiException(STATUS_MESSAGE.UNAUTHORIZED, STATUS_CODE.UNAUTHORIZED);
+        return user;
     }
 }

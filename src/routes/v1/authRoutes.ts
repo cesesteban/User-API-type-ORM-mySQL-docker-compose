@@ -1,9 +1,9 @@
 import express, { Router } from 'express';
 import { AuthController } from '../../controllers/AuthController';
 import { validateRequest } from '../../middlewares/validateRequest';
-import IRequestAuth from '../../models/auth/IRequestAuth';
+import IRequestAuth from '../../interfaces/auth/IRequestAuth';
 import { validateHeaders } from '../../middlewares/validateHeaders';
-import IRequestRefreshToken from '../../models/auth/IRequestRefreshToken';
+import IRequestRefreshToken from '../../interfaces/auth/IRequestRefreshToken';
 import { validateJwtSignature } from '../../middlewares/validateJwtSignature';
 
 const router: Router = express.Router();

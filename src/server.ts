@@ -7,6 +7,7 @@ import { DATA_SOURCE_INIZIALIZED, DATA_SOURCE_INIZIALIZED_ERR, NAMESPACE_API_SER
 import logging from './configs/logging';
 import { AppDataSource } from './configs/dataSource';
 import { snakeCaseStrategy } from './middlewares/snakeCaseStrategy';
+import errorHandler from './handlers/errorHandler';
 
 const router = (): Express => {
     const router: Express = express();
@@ -24,6 +25,14 @@ const router = (): Express => {
         next();
     });
 
+    AppDataSource.initialize()
+        .then(() => {
+            console.log(DATA_SOURCE_INIZIALIZED);
+        })
+        .catch((err) => {
+            console.error(DATA_SOURCE_INIZIALIZED_ERR, err);
+        });
+
     /** Parse the body of the request */
     router.use(bodyParser.urlencoded({ extended: true }));
     router.use(bodyParser.json());
@@ -33,16 +42,11 @@ const router = (): Express => {
     router.use(helmet());
     router.use(snakeCaseStrategy);
 
-    AppDataSource.initialize()
-        .then(() => {
-            console.log(DATA_SOURCE_INIZIALIZED);
-        })
-        .catch((err) => {
-            console.error(DATA_SOURCE_INIZIALIZED_ERR, err);
-        });
-
     /** Route here */
     router.use('/', routes);
+
+    /** Handler */
+    router.use(errorHandler);
 
     return router;
 };
